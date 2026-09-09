@@ -264,7 +264,7 @@ export class ChartManager {
             </div>
         `;
   }
-
+  
   debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
