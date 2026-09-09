@@ -4,7 +4,7 @@ import { ChartManager } from "./modules/ChartManager.js";
 
 class DashboardApp {
   constructor() {
-    this.dataManager = new DataManager("/api");
+    this.dataManager = new DataManager("");
     this.chartManager = null;
     this.performanceMonitor = new PerformanceMonitor();
     this.init();

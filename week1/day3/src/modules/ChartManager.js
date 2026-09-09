@@ -26,10 +26,10 @@ export class ChartManager {
 
   async createCharts() {
     try {
-      const [userData, revenueData, orderData] = await Promsie.all([
-        this.dataManager.fetchData("/api/users"),
-        this.dataManager.fetchData("/api/revenue"),
-        this.dataManager.fetchData("/api/orders"),
+      const [userData, revenueData, orderData] = await Promise.all([
+        this.dataManager.fetchData("/api/users.json"),
+        this.dataManager.fetchData("/api/revenue.json"),
+        this.dataManager.fetchData("/api/orders.json"),
       ]);
 
       this.createLineChart("revenueChart", revenueData);
@@ -40,7 +40,7 @@ export class ChartManager {
         revenueData,
         orderData,
       });
-    } catch (err) {
+    } catch (error) {
       console.error("Chart creation error : ", error);
       this.showError("Failed to load chart data");
     }

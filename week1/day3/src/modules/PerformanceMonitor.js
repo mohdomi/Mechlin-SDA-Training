@@ -68,7 +68,7 @@ export class PerformanceMonitor {
     const timestamp = Date.now();
     const metric = { name, value, timestamp };
     this.metrics.set(name, metric);
-    this.notifyObserver(metric);
+    this.notifyObservers(metric);
     this.storeMetric(metric);
   }
 
