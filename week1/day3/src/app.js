@@ -24,7 +24,6 @@ class DashboardApp {
 
   async setupUI() {
     const dashboardHTML = `
-            <div class="dashboard-container">
                 <div class="charts-grid">
                     <div class="chart-container">
                         <h3>Revenue Trend</h3>
@@ -47,10 +46,9 @@ class DashboardApp {
                     <h3>Performance Metrics</h3>
                     <div id="performance-metrics"></div>
                 </div>
-            </div>
         `;
 
-    document.querySelector(".content").innerHTML = dashboardHTML;
+    document.querySelector(".content").insertAdjacentHTML('beforeend', dashboardHTML);
   }
 
   async initializeCharts() {
@@ -93,11 +91,16 @@ class DashboardApp {
   }
 
   updatePerformanceDisplay(metric) {
+
+    if(metric.name === 'CLS') return; // i have commented this because it was causing an infinite race condition.
+
     const container = document.getElementById("performance-metrics");
     if (!container) reutrn;
 
-    const metricElement = document.createElement("div");
 
+
+    const metricElement = document.createElement("div");
+    
     metricElement.className = "metric-item";
     metricElement.innerHTML = `
             <span class="metric-name">${metric.name}:</span>
