@@ -29,6 +29,6 @@ export function getMockData(endpoint) {
   if (mockApiData[endpoint]) return mockApiData[endpoint];
   const key = endpoint.split("/").pop();
   return (
-    mockApiData[`/api/${key}`] ?? { labels: [], values: [] }
+    mockApiData[`/api/${key}`] ?? { labels: [], values: [] } 
   );
 }
