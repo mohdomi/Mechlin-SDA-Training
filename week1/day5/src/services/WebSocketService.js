@@ -17,6 +17,9 @@ class WebSocketService {
   }
 
   connect() {
+    if (!this.url) {
+      return;
+    }
     try {
       this.ws = new WebSocket(this.url);
       this.setupEventListeners();
@@ -32,7 +35,7 @@ class WebSocketService {
     this.ws.onopen = () => {
       console.log("Websocket Connected.");
       this.isConnected = true;
-      this.maxReconnectAttempts = 0;
+      this.reconnectAttempts = 0;
       this.startHeartBeat();
       this.processMessageQueue();
       this.notifySubscribers("connected", null);

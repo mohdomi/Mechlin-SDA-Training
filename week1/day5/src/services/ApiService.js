@@ -1,6 +1,7 @@
 class ApiService {
   constructor(baseURL, options = {}) {
-    ((this.baseURL = baseURL), (this.cache = new Map()));
+    this.baseURL = baseURL;
+    this.cache = new Map();
     this.retryAttempts = options.retryAttempts || 3;
     this.retryDelay = options.retryDelay || 1000;
     this.timeout = options.timeout || 10000;
@@ -33,16 +34,15 @@ class ApiService {
       const data = await response.json();
 
       if (options.cache !== false) {
-        (this.cache.set(cacheKey),
-          {
-            data,
-            timestamp: Date.now(),
-          });
+        this.cache.set(cacheKey, {
+          data,
+          timestamp: Date.now(),
+        });
       }
 
       return data;
     } catch (err) {
-      console.error("API request failed : ", error);
+      console.error("API request failed : ", err);
       throw err;
     }
   }
@@ -66,7 +66,7 @@ class ApiService {
       return response;
     } catch (err) {
       if (attempt < this.retryAttempts && this.shouldRetry(err)) {
-        await this.delay(this.retryDelay * MAth.pow(2, attempt - 1)); // waiting function or delays the request retries
+        await this.delay(this.retryDelay * Math.pow(2, attempt - 1)); // waiting function or delays the request retries
         return this.fetchWithRetry(url, config, attempt + 1);
       }
       throw err;
@@ -115,7 +115,7 @@ class ApiService {
   }
 
   getCacheSize() {
-    return this.cache.size();
+    return this.cache.size;
   }
 
   subscribe(callback) {
