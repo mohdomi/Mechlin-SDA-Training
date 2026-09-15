@@ -11,9 +11,9 @@ const rateLimit = require("express-rate-limit");
 const userService = require("./services/userService.js");
 const productService = require("./services/productService.js");
 const orderService = require("./services/orderService.js");
-const notifcationService = require("./services/notificationService.js");
+const notificationService = require("./services/notificationService.js");
 
-const errorHandler = require("./middleware/errorHandler");
+const { errorHandler } = require("./middleware/errorHandler");
 const logger = require("./middleware/logger");
 const auth = require("./middleware/auth");
 
@@ -28,7 +28,7 @@ class Application {
     this.server = createServer(this.app);
     this.io = new Server(this.server, {
       cors: {
-        origin: prcoes.env.FRONTEND_URL || "http://localhost:3000",
+        origin: process.env.FRONTEND_URL || "http://localhost:3000",
         methods: ["GET", "POST"],
       },
     });
@@ -99,7 +99,7 @@ class Application {
     await userService.initialize();
     await productService.initialize();
     await orderService.initialize();
-    await notifcationService.initialize();
+    await notificationService.initialize();
 
     console.log("All services initialized successfully");
   }
@@ -130,12 +130,12 @@ class Application {
   setupErrorHandling() {
     this.app.use(errorHandler);
 
-    process.on("unHandledRejection", (reason, promise) => {
+    process.on("unhandledRejection", (reason, promise) => {
       console.error("Unhandled Rejection at : ", promise, "reason : ", reason);
       process.exit(1);
     });
 
-    process.on("unhandledException", (error) => {
+    process.on("uncaughtException", (error) => {
       console.error("Uncaught Exception : ", error);
       process.exit(1);
     });
@@ -167,7 +167,7 @@ if (cluster.isPrimary) {
   });
 
   process.on("SIGTERM", () => {
-    console.log("Master recieved SIGTERM, shutting down gracfully.");
+    console.log("Master received SIGTERM, shutting down gracefully.");
     for (const id in cluster.workers) {
       cluster.workers[id].kill();
     }
