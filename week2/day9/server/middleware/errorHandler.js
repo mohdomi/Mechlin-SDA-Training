@@ -17,11 +17,12 @@ const logger = winston.createLogger({
   ],
 });
 class AppError extends Error {
-  constructor(message, statusCode) {
+  constructor(message, statusCode, details = null) {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = true;
-    Error.captureStackTrace(this, this.constructor);
+    this.details = details;
+    Error.captureStackTrace(this, this.constructor); // to hide the internal Error COnstructor code so the stack trace points exactly to where the user instantiated the custom error
   }
 }
 
@@ -37,6 +38,7 @@ const errorHandler = (err, req, res, next) => {
     method: req.method,
     ip: req.ip,
     userAgent: req.get("User-Agent"),
+    userId: req.user?.userId,
   });
 
   if (err.name === "CastError") {
@@ -63,10 +65,17 @@ const errorHandler = (err, req, res, next) => {
     const message = "Token expired";
     error = new AppError(message, 401);
   }
-
+  if (err.status === 429) {
+    const message = "Too many requests, please try again later";
+    error = new AppError(message, 429);
+  }
   res.status(error.statusCode || 500).json({
-    message: error.message || "Server Error",
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+    success: false,
+    error: {
+      message: error.message || "Server Error",
+      ...(error.details && { details: error.details }),
+      ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+    },
   });
 };
 
