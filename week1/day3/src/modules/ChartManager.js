@@ -98,7 +98,7 @@ export class ChartManager {
 
   createBarChart(canvasId, data) {
     const ctx = document.getElementById(canvasId).getContext("2d");
-    his.charts.set(
+    this.charts.set(
       canvasId,
       new Chart(ctx, {
         type: "bar",
