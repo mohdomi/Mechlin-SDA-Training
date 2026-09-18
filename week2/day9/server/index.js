@@ -16,6 +16,7 @@ const notificationService = require("./services/notificationService.js");
 const { errorHandler } = require("./middleware/errorHandler");
 const logger = require("./middleware/logger");
 const auth = require("./middleware/auth");
+const { performanceMiddleware } = require("./middleware/performance");
 
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
@@ -79,6 +80,7 @@ class Application {
     );
 
     this.app.use(logger);
+    this.app.use(performanceMiddleware);
   }
 
   async setupRoutes() {
